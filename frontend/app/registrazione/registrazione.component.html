@@ -1,0 +1,99 @@
+<div class="main-div">
+  <mat-card class="mat-card">
+    <mat-card-content class="mat-card">
+      <div>
+        <mat-list>
+          <!-- SELECT ROLE -->
+          <p>
+            <mat-form-field class="example-form-fields" appearance="outline">
+              <mat-label>Select an option</mat-label>
+              <mat-select [(value)]="role" (selectionChange)="adaptFormGroup()">
+                <mat-option value="CLIENTE">Cliente</mat-option>
+                <mat-option value="RISTORATORE">Esercente</mat-option>
+                <mat-option value="RIDER">Rider</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </p>
+          <!-- ENTER USERNAME -->
+          <mat-spinner *ngIf="spinner"></mat-spinner>
+
+          <!-- ENTER PASSWORD-->
+
+
+          <!-- CONFIRM PASSWORD-->
+          <form [formGroup]="form">
+
+            <mat-form-field *ngIf="role==='RISTORATORE'" class="example-form-fields" appearance="outline">
+              <mat-label>Enter your restaurant name</mat-label>
+              <input matInput formControlName="restaurant_name">
+            </mat-form-field>
+
+            <mat-form-field class="example-form-fields" appearance="outline">
+              <mat-label>Enter your username</mat-label>
+              <input matInput formControlName="username">
+            </mat-form-field>
+
+            <mat-form-field class="example-form-fields" appearance="outline">
+              <input matInput [type]="hide ? 'password' : 'text'" appearance="outline" placeholder="New password"
+                     formControlName="password" required>
+              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                      [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              <mat-error *ngIf="form.hasError('required', 'password')">
+                Please enter your new password
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-form-fields" appearance="outline">
+              <input matInput [type]="hide ? 'password' : 'text'" appearance="outline" placeholder="Confirm password"
+                     formControlName="confirmPassword"
+              >
+              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                      [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+              <mat-error *ngIf="form.get('confirmPassword')?.hasError">
+                Le password sono diverse
+              </mat-error>
+            </mat-form-field>
+
+            <div *ngIf="role !=='RIDER'">
+              <mat-form-field class="example-form-fields" appearance="outline">
+                <mat-label>Enter address</mat-label>
+                <input matInput formControlName="address">
+              </mat-form-field>
+
+              <mat-form-field class="example-form-fields" appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="city">
+              </mat-form-field>
+
+              <mat-form-field class="example-form-fields" appearance="outline">
+                <mat-label>Postal Code</mat-label>
+                <input matInput formControlName="cap">
+              </mat-form-field>
+            </div>
+
+          </form>
+
+          <br>
+          <!-- LOGIN BUTTON-->
+
+          <div matDialogActions>
+            <button class="login-button" mat-raised-button (click)="login()">Back to Login</button>
+            <button class="register-button" mat-raised-button (click)="register()"
+                    [disabled]="!form.valid">Sign Up
+            </button>
+          </div>
+
+        </mat-list>
+
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+
+
+

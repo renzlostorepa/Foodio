@@ -1,0 +1,90 @@
+<p>
+
+  <mat-toolbar>
+    <mat-icon>store</mat-icon>
+    &nbsp;
+    <span>Delivery</span>
+    <span class="example-spacer"></span>
+    <mat-label>
+      € {{userInfo.credit}}
+    </mat-label>
+    <button matTooltip="Order history" mat-icon-button class="example-icon favorite-icon"
+            aria-label="Example icon-button with heart icon">
+      <mat-icon>receipt</mat-icon>
+    </button>
+    <button matTooltip="Logout" (click)="logout()" mat-icon-button class="example-icon">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+  </mat-toolbar>
+</p>
+
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" position="end" opened>
+
+    <!-- CARD RISTORANTI -->
+    <app-order *ngIf="!(pendingOrder); else waiting" [userInfo]="userInfo"
+               [customerCoordinates]="coordinates" (onLocations)="initializeRestaurantLocation($event)"></app-order>
+
+    <ng-template #waiting>
+      <mat-card class="order-cards">
+
+        <mat-card-header *ngIf="order.state ==='pending'">
+          Waiting confirm
+          <mat-icon>hourglass_empty</mat-icon>
+        </mat-card-header>
+        <mat-card-header *ngIf="order.state ==='waiting_rider'">
+          Order Accepted! Searching for rider...
+          <mat-icon>hourglass_empty</mat-icon>
+        </mat-card-header>
+        <mat-card-header *ngIf="order.state ==='confirmed' || order.state === 'delivering'">
+          Order Accepted! Rider is coming
+          <mat-icon>local_shipping</mat-icon>
+        </mat-card-header>
+        <mat-card-header *ngIf="order.state ==='completed'">
+          Order Delivered
+          <mat-icon>done</mat-icon>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item *ngFor="let category of order.order">
+              <div *ngFor="let element of category.elements">
+                <span matListItemTitle>
+              {{element.name}}
+                </span>
+                <span matListItemLine>
+                  {{element.price}}
+                </span>
+              </div>
+            </mat-list-item>
+
+            <mat-list-item align="end">
+              Total € {{order.bill}}
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>
+        </mat-card-content>
+
+      </mat-card>
+
+    </ng-template>
+
+
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="map-container">
+      <div class="map-frame">
+        <div *ngIf="coordinates">
+          <app-map [coordinates]="coordinates" [destLocation]="riderLocation"
+                   [restaurantGeolocations]="restaurantGeolocations" [type]="customer" [onTravel]="onTravel"></app-map>
+        </div>
+
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+
+
+
+

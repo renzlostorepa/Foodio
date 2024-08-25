@@ -1,0 +1,117 @@
+<p>
+
+  <mat-toolbar>
+    <mat-icon>store</mat-icon>
+    &nbsp;
+    <span>Delivery</span>
+    <span class="example-spacer"></span>
+    <mat-label>
+      € {{userInfo.credit}}
+    </mat-label>
+    <button matTooltip="Order history" mat-icon-button class="example-icon favorite-icon"
+            aria-label="Example icon-button with heart icon">
+      <mat-icon>receipt</mat-icon>
+    </button>
+    <button matTooltip="Logout" (click)="logout()" mat-icon-button class="example-icon">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+  </mat-toolbar>
+</p>
+
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" position="end" opened>
+
+    <mat-card class="order-cards" *ngFor="let order of orders">
+
+      <mat-card-actions *ngIf="order.state === 'pending'" align="end">
+        <button mat-button (click)="stampa(order)">ACCEPT</button>
+        <button mat-button (click)="declineOrder(order)">DECLINE</button>
+      </mat-card-actions>
+      <mat-card-header *ngIf="order.state ==='waiting_rider'">
+        Waiting for rider
+        <mat-icon>hourglass_empty</mat-icon>
+      </mat-card-header>
+      <mat-card-header *ngIf="order.state ==='confirmed' || order.state==='delivering'">
+        Order confirmed
+        <mat-icon>done</mat-icon>
+      </mat-card-header>
+      <mat-card-header *ngIf="order.state ==='completed'">
+        Order Delivered
+        <mat-icon>done_all</mat-icon>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item *ngFor="let category of order.order">
+            <span matListItemTitle *ngFor="let elements of category.elements">
+              {{elements.name}}
+              <mat-divider></mat-divider>
+            </span>
+          </mat-list-item>
+          <mat-list-item align="end">
+            € {{order.bill}}
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </mat-list>
+      </mat-card-content>
+
+
+    </mat-card>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <mat-toolbar>
+
+      <div>
+        <button matTooltip="Modify menu" (click)="openDialog()">
+          <mat-icon>note_add</mat-icon>
+        </button>
+      </div>
+
+      <span class="example-spacer"></span>
+      <div>
+        <mat-slide-toggle matTooltip="Show Menu to customers" [(ngModel)]="showMenu" (ngModelChange)="show($event)">
+          Show
+        </mat-slide-toggle>
+      </div>
+
+
+    </mat-toolbar>
+
+    <mat-tab-group>
+
+      <mat-tab *ngFor="let menu of shop.menu" label="{{menu.category}}">
+        <mat-label>
+          <button matTooltip="Delete {{menu.category}} category" mat-icon-button (click)="delete(menu, 'category')">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-label>
+
+        <mat-list role="list">
+
+
+          <mat-list-item *ngFor="let element of menu.elements">
+            <span matListItemTitle>{{element.name}}</span>
+            <span matListItemLine>€ {{element.price}}</span>
+            <button matTooltip="Update {{element.name}}" mat-icon-button matListItemMeta (click)="update(element)">
+              <mat-icon>update</mat-icon>
+            </button>
+            <button matTooltip="Delete {{element.name}}" mat-icon-button matListItemMeta
+                    (click)="delete(element, 'element')">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+
+          <mat-divider></mat-divider>
+
+        </mat-list>
+      </mat-tab>
+
+
+    </mat-tab-group>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+
+
+
+

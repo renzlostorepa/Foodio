@@ -1,0 +1,24 @@
+.main-div {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mat-card {
+  background-color: antiquewhite;
+  justify-content: center;
+}
+
+.example-form-fields {
+  display: flex;
+  align-items: flex-start;
+}
+
+.register-button {
+  display: inline-block;
+  margin-left: 95px;
+  margin-right: 0;
+}
+
+

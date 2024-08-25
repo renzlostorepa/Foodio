@@ -1,0 +1,42 @@
+version: '1'
+
+services:
+  backend:
+    build:
+      context: './auth/app/src'
+      dockerfile: './Dockerfile'
+    image: 'backend'
+    container_name: backend
+    depends_on:
+      - mongodb
+      - redis
+    ports:
+      - 4000:4000
+
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - 27017:27017
+    container_name: mongodb
+    volumes:
+      - ./mongorestore.sh:/docker-entrypoint-initdb.d/mongorestore.sh
+      - ./dump:/dump
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - 6379:6379
+
+  angular:
+    build:
+      context: './frontend'
+      dockerfile: 'Dockerfile'
+    image: angular
+    container_name: angular
+    depends_on:
+      - backend
+    ports:
+      - 4200:4200
+
+

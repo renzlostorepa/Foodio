@@ -1,0 +1,97 @@
+<mat-dialog-content class="content">
+
+  <mat-divider></mat-divider>
+
+  <div *ngIf="data.owner; else user">
+
+    <div *ngIf="data.add; else updateMenu">
+      <mat-form-field>
+        <mat-select [(value)]="add.role">
+          <mat-option value="Category">New Category</mat-option>
+          <mat-option value="Element">New Element</mat-option>
+        </mat-select>
+
+      </mat-form-field>
+
+      <mat-list>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="add.name">
+        </mat-form-field>
+        <br>
+        <div *ngIf="add.role==='Element'">
+          <mat-form-field>
+            <mat-label>Price</mat-label>
+            <input matInput type="number" placeholder="price" [(ngModel)]="add.price">
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <mat-label>Choose Category</mat-label>
+            <mat-select #categoryList (selectionChange)="selectChange(categoryList.selected)">
+              <mat-option *ngFor="let menu of data.shop" [value]="menu.category">{{menu.category}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </mat-list>
+    </div>
+
+    <ng-template #updateMenu>
+      <mat-list>
+        <mat-form-field>
+          <input matInput [(ngModel)]="dataCopy.name">
+          <!--[(ngModel)]="data.shop.name"-->
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+          <input matInput [(ngModel)]="dataCopy.price">
+          <!-- [(ngModel)]="data.shop.price"-->
+        </mat-form-field>
+      </mat-list>
+
+    </ng-template>
+
+
+  </div>
+
+
+  <ng-template #user>
+    <div *ngFor="let category of data.shop.menu" class="content">
+      <mat-selection-list #pizzaList
+                          (selectionChange)="onGroupsChange(pizzaList.selectedOptions.selected, category.category)">
+        <div mat-subheader>{{category.category}}</div>
+        <mat-list-option *ngFor="let element of category.elements" #pizza>
+          <span matListItemTitle> {{element.name}}</span>
+          <span matListItemLine>€ {{element.price}}</span>
+
+        </mat-list-option>
+      </mat-selection-list>
+      <mat-divider></mat-divider>
+    </div>
+  </ng-template>
+
+
+</mat-dialog-content>
+
+<div mat-dialog-actions>
+  <div *ngIf="data.owner &&!data.add; else userActions">
+    <button [mat-dialog-close]="false" mat-button> Cancel</button>
+    <button [mat-dialog-close]="dataCopy" mat-button> Save</button>
+  </div>
+
+  <ng-template #userActions>
+
+    <div *ngIf="data.add; else takeOrder">
+      <button [mat-dialog-close]="false" mat-button> Cancel</button>
+      <button [mat-dialog-close]="add" mat-button> Save</button>
+    </div>
+    <ng-template #takeOrder>
+      <button [mat-dialog-close]="false" mat-button> Cancel</button>
+      <button (click)="save()" mat-button> Save</button>
+    </ng-template>
+
+  </ng-template>
+
+</div>
+
+

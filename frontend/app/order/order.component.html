@@ -1,0 +1,14 @@
+<div *ngFor="let shop of allShops">
+  <mat-card (click)="openDialog(shop)" class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image">
+        <img mat-card-avatar
+             src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
+             alt="Photo of a Shiba Inu">
+      </div>
+      <mat-card-title>{{shop.restaurant_name}}</mat-card-title>
+
+    </mat-card-header>
+  </mat-card>
+</div>
+

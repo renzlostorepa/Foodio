@@ -1,0 +1,91 @@
+<p>
+
+  <mat-toolbar>
+    <mat-icon>store</mat-icon>
+    &nbsp;
+    <span>Delivery</span>
+    <span class="example-spacer"></span>
+    <div *ngIf="orders.length == 0 && currentOrder.length == 0">
+      <mat-slide-toggle matTooltip="Available to work?" [(ngModel)]="userInfo.working"
+                      (ngModelChange)="work($event)">
+        Available to deliver
+      </mat-slide-toggle>
+    </div>
+    <span class="example-spacer"></span>
+    <mat-label>
+      € {{userInfo.credit}}
+    </mat-label>
+    <button matTooltip="Logout" (click)="logout()" mat-icon-button class="example-icon">
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+  </mat-toolbar>
+</p>
+
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" position="end" opened>
+
+    <!-- CARD RISTORANTI -->
+    <div *ngIf="!onTravel; else shipping">
+      <mat-card *ngFor="let order of orders">
+        <mat-card-actions *ngIf="order.state === 'waiting_rider'" align="end">
+          <button mat-button (click)="acceptOrder(order)">ACCEPT</button>
+          <button mat-button (click)="declineOrder(order)">DECLINE</button>
+        </mat-card-actions>
+
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item *ngFor="let category of order.order">
+            <span matListItemTitle *ngFor="let elements of category.elements">
+              {{elements.name}}
+              <mat-divider></mat-divider>
+            </span>
+            </mat-list-item>
+            <mat-list-item align="end">
+              Your Fee € {{order.bill * 0.10}}
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>
+        </mat-card-content>
+
+      </mat-card>
+    </div>
+
+    <ng-template #shipping>
+      <mat-card>
+        <mat-card-actions *ngIf="currentOrder.state === 'confirmed'" align="end">
+          <button mat-button (click)="confirmPickup()">CONFIRM PICKUP</button>
+        </mat-card-actions>
+        <mat-card-actions *ngIf="currentOrder.state === 'delivering'" align="end">
+          <button mat-button (click)="confirmDelivered()">DELIVERED</button>
+        </mat-card-actions>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item *ngFor="let category of currentOrder.order">
+            <span matListItemTitle *ngFor="let elements of category.elements">
+              {{elements.name}}
+              <mat-divider></mat-divider>
+            </span>
+            </mat-list-item>
+            <mat-list-item align="end">
+              Your Fee € {{currentOrder.bill * 0.10}}
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>
+        </mat-card-content>
+
+      </mat-card>
+    </ng-template>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="map-container">
+      <div class="map-frame">
+        <div *ngIf="coordinates">
+          <app-map [coordinates]="coordinates" [onTravel]="onTravel" [destLocation]="destinationCoordinate"
+                   [type]='rider'></app-map>
+        </div>
+
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
